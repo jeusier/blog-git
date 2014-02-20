@@ -1,0 +1,15 @@
+extends layout
+block content
+	h1= pageTitle
+	#articles
+		form(id="create" action="/blogs" method="POST")
+			div
+				div
+					span Title :
+					input(type="text" id="title" name="title")
+				div
+					span Body :
+					textarea( name="body" id="body" rows=20)
+				div
+					input(type="submit" value="Post New Blog Article")
+		#result

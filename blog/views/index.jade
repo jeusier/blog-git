@@ -1,0 +1,11 @@
+extends layout
+
+block content
+  h1= pageTitle
+  #articles
+    - each article in articles
+      div.article
+        div.title
+          a(href='/blogs/#{article._id}')= article.title
+        div.body= article.body
+        div.created_at= 'Created at: '+ article.created_at
