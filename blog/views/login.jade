@@ -1,0 +1,14 @@
+extends layout
+block content
+  h1= pageTitle
+    form(id="user_auth" action="/login" method="POST")
+      div
+        div
+          span Username :
+          input(type="text" id="user_login" name="user_login")
+        div
+          span Password :
+          input(type="password" name="pass_login" id="pass_login" rows=20)
+        div
+          input(type="submit" value="Sign In")
+    #result
