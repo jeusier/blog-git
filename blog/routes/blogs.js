@@ -67,9 +67,10 @@ app.get('/blogs', function(req, res) {
 //Find blog by id
 app.get('/blogs/:id', function(req, res) {
 if (req.session.name){
+	var logged_in = true;
 	var blog_id = req.params.id;
 	if (blog_id == "new") {
-		res.render('new', {pageTitle: 'New Post'})
+		res.render('new', {pageTitle: 'New Post', logged: logged_in})
 	} else {
 		//find blog based on id in mongodb
 		blogs.findOne({_id: blog_id}, function(err, blog) {
@@ -78,13 +79,12 @@ if (req.session.name){
 				console.log("error: unable to display blog");
 			}
 			//display the blog into show
-			res.render('show', {blog: blog});
+			res.render('show', {pageTitle: 'Update/Delete Post', blog: blog, logged: logged_in});
 
 		}); //end blogs.findById
 
 	}
 } else {
-	req.session.name = undefined;
 	res.send("You are not logged in. <a href='/login'>Log in here</a>");
 
 }
@@ -95,13 +95,13 @@ if (req.session.name){
 //Display new blog form
 app.get('/blogs/new', function(req, res) {
 	if (req.session.name){
+		var logged_in = true;
 		var blog_new = req.params.new;
 		if (blog_new == "new") {
 			//display form in new.jade
-			res.render('new', {pageTitle: 'New Post'});
+			res.render('new', {pageTitle: 'New Post', logged: logged_in});
 		}
 	} else {
-		req.session.name = undefined;
 		res.send("You are not logged in. <a href='/login'>Log in here</a>");
 	}
 
@@ -133,7 +133,6 @@ app.post('/blogs', function(req, res) {
 			);
 		return;
 	} else {
-		req.session.name = undefined;
 		res.send("You are not logged in. <a href='/login'>Log in here</a>");
 	}
 
@@ -167,7 +166,6 @@ app.put('/blogs/:id', function(req, res) {
 		}); //end blogs.findOne
 
 	} else {
-		req.session.name = undefined;
 		res.send("You are not logged in. <a href='/login'>Log in here</a>");
 	}
 
@@ -187,7 +185,6 @@ app.delete('/blogs/:id', function(req, res) {
 		res.redirect("..");
 
 	} else {
-		req.session.name = undefined;
 		res.send("You are not logged in. <a href='/login'>Log in here</a>");
 	}	
 
