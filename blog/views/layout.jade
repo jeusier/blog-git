@@ -29,10 +29,6 @@ body
                             a(href='#about') About
                         li
                             a(href='#contact') Contact
-                        //- if req.sessions.name !== undefined
-                        //-     li
-                        //-         a(href='#logout')= 'Welcome '+req.session.name+'<br /><a href="/logout">Logout</a>'
-                        //- else
                         li.dropdown
                             a.dropdown-toggle(href='#', data-toggle='dropdown')
                                 | Dropdown
@@ -50,6 +46,12 @@ body
                                     a(href='#') Separated link
                                 li
                                     a(href='#') One more separated link
+                        if logged == true
+                            li.loginLink
+                                a(href='/logout') Logout
+                        else
+                            li.loginLink
+                                a(href='/login') Login
     //- block sidebar
     //-         .col-sm-3.col-sm-offset-1.blog-sidebar
     //-             .sidebar-module.sidebar-module-inset

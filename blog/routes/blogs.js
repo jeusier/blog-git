@@ -23,7 +23,10 @@ mongoose.connect('mongodb://localhost/blogdb')
 
 //Find all blogs
 app.get('/blogs', function(req, res) {
-	console.log(req.session.name);
+	if (req.session.name){
+		var logged_in = true;
+		var session_name = req.session.name;
+		console.log(logged_in);
 	//find all blogs in collection
 	blogs.find(function(err, blog) {
 		if (err) {
@@ -32,11 +35,31 @@ app.get('/blogs', function(req, res) {
 		//display all blogs into index
 		res.render('index', { 
 			pageTitle: 'Blog-git',
-			articles: blog
+			articles: blog,
+			logged: logged_in
 
 		}); //end of res.render
 
 	}); //end of blogs.find
+
+	} else {
+		var logged_in = false;
+		console.log(logged_in);
+
+		blogs.find(function(err, blog) {
+			if (err) {
+				console.log("error: blog list isn't displaying")
+			}
+		//display all blogs into index
+			res.render('index', { 
+				pageTitle: 'Blog-git',
+				articles: blog,
+				logged: logged_in
+
+		}); //end of res.render
+
+	}); //end of blogs.find
+	}
 
 }); //end of find all blogs
 
@@ -61,7 +84,9 @@ if (req.session.name){
 
 	}
 } else {
+	req.session.name = undefined;
 	res.send("You are not logged in");
+
 }
 
 }); //end find blog by id
@@ -76,8 +101,9 @@ app.get('/blogs/new', function(req, res) {
 			res.render('new', {pageTitle: 'New Post'});
 		}
 	} else {
-	res.send("You are not logged in");
-}
+		req.session.name = undefined;
+		res.send("You are not logged in");
+	}
 
 }); //end of display new blog form
 
@@ -107,7 +133,8 @@ app.post('/blogs', function(req, res) {
 			);
 		return;
 	} else {
-	res.send("You are not logged in");
+		req.session.name = undefined;
+		res.send("You are not logged in");
 	}
 
 }); //end create new blog
@@ -140,7 +167,8 @@ app.put('/blogs/:id', function(req, res) {
 		}); //end blogs.findOne
 
 	} else {
-	res.send("You are not logged in");
+		req.session.name = undefined;
+		res.send("You are not logged in");
 	}
 
 }); //end update blog
@@ -159,7 +187,8 @@ app.delete('/blogs/:id', function(req, res) {
 		res.redirect("..");
 
 	} else {
-	res.send("You are not logged in");
+		req.session.name = undefined;
+		res.send("You are not logged in");
 	}	
 
 }); //end of delete blog
