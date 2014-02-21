@@ -1,6 +1,6 @@
 extends layout
-block content
-	h1 View/Modify Post
+block append content
+	h1.blog-header= pageTitle
 	form(id='update' action='/blogs/#{blog._id}' method='post')
 		input(type='hidden', name='_method', value='put')
 		div

@@ -1,6 +1,6 @@
 extends layout
-block content
-  h1= pageTitle
+block append content
+  h1.blog-header = pageTitle
   #articles
     form(id="create" action="/blogs" method="POST")
       div
