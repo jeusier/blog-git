@@ -1,4 +1,8 @@
-body {
+.blog-header {
+margin-top: 75px;
+}
+
+/*body {
   font-family: "Lucida Grande", Helvetica, Arial, sans-serif;
   font-size: 14px;
   text-align: center;
@@ -28,10 +32,6 @@ h1 {
 	margin: 20px;
 }
 
-/*.created_at {
-	display: none;
-}
-*/
 .title {
 	font-weight: bold;
 	font-size: 20px;
@@ -45,4 +45,4 @@ h1 {
 a {
   color: #00B7FF;
 }
-
+*/

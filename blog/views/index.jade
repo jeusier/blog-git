@@ -1,11 +1,15 @@
 extends layout
 
-block content
-  h1= pageTitle
-  #articles
-    - each article in articles
-      div.article
-        div.title
-          a(href='/blogs/#{article._id}')= article.title
-        div.body= article.body
-        div.created_at= 'Created at: '+ article.created_at
+block append content
+    div.container
+        div.blog-header
+            h1.blog-title= pageTitle
+        div.row
+            div.col-sm-8.blog-main
+                - each article in articles
+                    div.blog-post
+                        h2.blog-post-title
+                            a(href='/blogs/#{article._id}')= article.title
+                        p.body= article.body
+                        p.blog-post-meta= 'Created at: '+ article.created_at
+
