@@ -85,7 +85,7 @@ if (req.session.name){
 	}
 } else {
 	req.session.name = undefined;
-	res.send("You are not logged in");
+	res.send("You are not logged in. <a href='/login'>Log in here</a>");
 
 }
 
@@ -102,7 +102,7 @@ app.get('/blogs/new', function(req, res) {
 		}
 	} else {
 		req.session.name = undefined;
-		res.send("You are not logged in");
+		res.send("You are not logged in. <a href='/login'>Log in here</a>");
 	}
 
 }); //end of display new blog form
@@ -134,7 +134,7 @@ app.post('/blogs', function(req, res) {
 		return;
 	} else {
 		req.session.name = undefined;
-		res.send("You are not logged in");
+		res.send("You are not logged in. <a href='/login'>Log in here</a>");
 	}
 
 }); //end create new blog
@@ -168,7 +168,7 @@ app.put('/blogs/:id', function(req, res) {
 
 	} else {
 		req.session.name = undefined;
-		res.send("You are not logged in");
+		res.send("You are not logged in. <a href='/login'>Log in here</a>");
 	}
 
 }); //end update blog
@@ -188,7 +188,7 @@ app.delete('/blogs/:id', function(req, res) {
 
 	} else {
 		req.session.name = undefined;
-		res.send("You are not logged in");
+		res.send("You are not logged in. <a href='/login'>Log in here</a>");
 	}	
 
 }); //end of delete blog
