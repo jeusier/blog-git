@@ -1,15 +1,18 @@
 extends layout
 
 block append content
-    div.container
+    div.container.centered
         div.blog-header
             h1.blog-title= pageTitle
-        div.row
-            div.col-sm-8.blog-main
-                - each article in articles
-                    div.blog-post
+        div
+            - each article in articles
+                div.blog-post.centered_margin
+                    div
                         h2.blog-post-title
                             a(href='/blogs/#{article._id}')= article.title
+                    div
                         p.body= article.body
+                    div
                         p.blog-post-meta= 'Created at: '+ article.created_at
+
 

@@ -64,36 +64,8 @@ app.get('/blogs', function(req, res) {
 }); //end of find all blogs
 
 
-//Find blog by id
-app.get('/blogs/:id', function(req, res) {
-if (req.session.name){
-	var logged_in = true;
-	var blog_id = req.params.id;
-	if (blog_id == "new") {
-		res.render('new', {pageTitle: 'New Post', logged: logged_in})
-	} else {
-		//find blog based on id in mongodb
-		blogs.findOne({_id: blog_id}, function(err, blog) {
-			console.log(blog_id);
-			if (err) {
-				console.log("error: unable to display blog");
-			}
-			//display the blog into show
-			res.render('show', {pageTitle: 'Update/Delete Post', blog: blog, logged: logged_in});
-
-		}); //end blogs.findById
-
-	}
-} else {
-	res.send("You are not logged in. <a href='/login'>Log in here</a>");
-
-}
-
-}); //end find blog by id
-
-
 //Display new blog form
-app.get('/blogs/new', function(req, res) {
+app.get('/blogs/:new', function(req, res) {
 	if (req.session.name){
 		var logged_in = true;
 		var blog_new = req.params.new;
@@ -106,6 +78,82 @@ app.get('/blogs/new', function(req, res) {
 	}
 
 }); //end of display new blog form
+
+app.get('/blogs/:id', function(req, res) {
+	if (req.session.name){
+		var logged_in = true;
+		var find_id = req.params.id;
+
+		if (find_id == "new") {
+			res.render('new', {pageTitle: 'New Post', logged: logged_in})
+		}
+	//find all blogs in collection
+	blogs.findOne({_id: find_id}, function(err, blog) {
+		if (err) {
+			console.log("error: blog isn't displaying")
+		}
+
+		//display all blogs into index
+		res.render('show', { 
+			pageTitle: 'View Post',
+			blog: blog,
+			logged: logged_in
+
+		}); //end of res.render
+
+	}); //end of blogs.find
+
+	} else {
+		var logged_in = false;
+		var find_id = req.params.id;
+
+		if (find_id == "new") {
+			res.render('new', {pageTitle: 'New Post', logged: logged_in})
+		}
+
+		blogs.findOne({_id: find_id}, function(err, blog) {
+			if (err) {
+				console.log("error: blog isn't displaying")
+			}
+		//display all blogs into index
+			res.render('show', { 
+				pageTitle: 'View Post',
+				blog: blog,
+				logged: logged_in
+
+			}); //end of res.render
+
+		}); //end of blogs.find
+	}
+
+}); //end of find all blogs
+
+//Find blog by id
+app.get('/blogs/:id/:edit', function(req, res) {
+	if (req.session.name){
+		var logged_in = true;
+		var blog_id = req.params.id;
+		if (blog_id == "new") {
+			res.render('new', {pageTitle: 'New Post', logged: logged_in})
+		} else {
+			//find blog based on id in mongodb
+			blogs.findOne({_id: blog_id}, function(err, blog) {
+				console.log(blog_id);
+				if (err) {
+					console.log("error: unable to display blog");
+				}
+				//display the blog into show
+				res.render('edit', {pageTitle: 'Update/Delete Post', blog: blog, logged: logged_in});
+
+			}); //end blogs.findById
+
+		}
+	} else {
+		res.send("You are not logged in. <a href='/login'>Log in here</a>");
+
+	}
+
+}); //end find blog by id
 
 
 //Create new blog

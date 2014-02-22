@@ -1,18 +1,14 @@
 extends layout
 block append content
-	h1.blog-header= pageTitle
-	form(id='update' action='/blogs/#{blog._id}' method='post')
-		input(type='hidden', name='_method', value='put')
-		div
-			div
-				span Title :
-				input(type="text" id="title" name="title" value='#{blog.title}')
-			div
-				span Body :
-				textarea( name="body" id="body" rows=20 value='#{blog.body}')= blog.body
-			div
-				input(type="submit" value="Update Blog Post")
-	form(id='delete' action='/blogs/#{blog._id}' method='post')
-		input(type='hidden' name='_method' value='delete')
-		input(type='submit' value='Delete Blog Post')
-	#result
+    div.container.centered
+        div.blog-header
+            h1.blog-title= pageTitle
+        div.row
+            div.blog-post.centered_margin
+                h2.blog-post-title
+                    a(href='/blogs/#{blog._id}')= blog.title
+                p.body= blog.body
+                p.blog-post-meta= 'Created at: '+ blog.created_at
+                if logged == true
+                    button(onclick='window.location.href="/blogs/#{blog._id}/edit"') Edit Post
+

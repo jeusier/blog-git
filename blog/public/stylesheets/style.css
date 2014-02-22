@@ -1,3 +1,11 @@
 .blog-header {
 margin-top: 75px;
 }
+
+.centered {
+    text-align: center;
+}
+
+.centered_margin {
+    margin: 0 25%;
+}

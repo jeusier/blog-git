@@ -1,0 +1,16 @@
+extends layout
+block append content
+  div.centered.centered_margin
+    h1.blog-header= pageTitle
+    form(role="form" id='update' action='/blogs/#{blog._id}' method='post')
+      input(type='hidden', name='_method', value='put')
+      div.form-group
+        label(for="title") Title: 
+        input(class="form-control" type="text" id="title" name="title" value='#{blog.title}')
+      div.form-group
+        label(for="body") Body: 
+        textarea(class="form-control" name="body" id="body" rows=20 value='#{blog.body}')= blog.body
+      button(type="submit" class="btn btn-default") Update Post
+    form(role="form" id='delete' action='/blogs/#{blog._id}' method='post')
+      input(type='hidden' name='_method' value='delete')
+      button(type="submit" class="btn btn-default") Delete Post
