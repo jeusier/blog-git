@@ -65,57 +65,38 @@ app.get('/blogs', function(req, res) {
 
 
 //Display new blog form
-app.get('/blogs/:new', function(req, res) {
-	if (req.session.name){
-		var logged_in = true;
-		var blog_new = req.params.new;
-		if (blog_new == "new") {
-			//display form in new.jade
-			res.render('new', {pageTitle: 'New Post', logged: logged_in});
+var newPost = function (){
+	app.get('/blogs/:new', function(req, res) {
+		if (req.params.new === "new") {
+			if (req.session.name){
+				var logged_in = true;
+				
+					//display form in new.jade
+				res.render('new', {pageTitle: 'New Post', logged: logged_in});
+				
+			} else {
+				res.send("You are not logged in. <a href='/login'>Log in here</a>");
+			}
 		}
-	} else {
-		res.send("You are not logged in. <a href='/login'>Log in here</a>");
-	}
 
-}); //end of display new blog form
+	});
+} //end of display new blog form
 
 app.get('/blogs/:id', function(req, res) {
-	if (req.session.name){
-		var logged_in = true;
-		var find_id = req.params.id;
-
-		if (find_id == "new") {
-			res.render('new', {pageTitle: 'New Post', logged: logged_in})
-		}
-	//find all blogs in collection
-	blogs.findOne({_id: find_id}, function(err, blog) {
-		if (err) {
-			console.log("error: blog isn't displaying")
-		}
-
-		//display all blogs into index
-		res.render('show', { 
-			pageTitle: 'View Post',
-			blog: blog,
-			logged: logged_in
-
-		}); //end of res.render
-
-	}); //end of blogs.find
-
+	if (req.params.id == "new") {
+		newPost();
 	} else {
-		var logged_in = false;
-		var find_id = req.params.id;
+		if (req.session.name){
+			var logged_in = true;
+			var find_id = req.params.id;
 
-		if (find_id == "new") {
-			res.render('new', {pageTitle: 'New Post', logged: logged_in})
-		}
-
+		//find all blogs in collection
 		blogs.findOne({_id: find_id}, function(err, blog) {
 			if (err) {
 				console.log("error: blog isn't displaying")
 			}
-		//display all blogs into index
+
+			//display all blogs into index
 			res.render('show', { 
 				pageTitle: 'View Post',
 				blog: blog,
@@ -124,18 +105,39 @@ app.get('/blogs/:id', function(req, res) {
 			}); //end of res.render
 
 		}); //end of blogs.find
+
+		} else {
+			var logged_in = false;
+			var find_id = req.params.id;
+
+			blogs.findOne({_id: find_id}, function(err, blog) {
+				if (err) {
+					console.log("error: blog isn't displaying")
+				}
+			//display all blogs into index
+				res.render('show', { 
+					pageTitle: 'View Post',
+					blog: blog,
+					logged: logged_in
+
+				}); //end of res.render
+
+			}); //end of blogs.find
+		}
 	}
 
 }); //end of find all blogs
 
+
 //Find blog by id
 app.get('/blogs/:id/:edit', function(req, res) {
-	if (req.session.name){
-		var logged_in = true;
-		var blog_id = req.params.id;
-		if (blog_id == "new") {
-			res.render('new', {pageTitle: 'New Post', logged: logged_in})
-		} else {
+	if (req.params.id == "new") {
+		newPost();
+	} else {
+		if (req.session.name){
+			var logged_in = true;
+			var blog_id = req.params.id;
+		
 			//find blog based on id in mongodb
 			blogs.findOne({_id: blog_id}, function(err, blog) {
 				console.log(blog_id);
@@ -147,12 +149,11 @@ app.get('/blogs/:id/:edit', function(req, res) {
 
 			}); //end blogs.findById
 
+		} else {
+			res.send("You are not logged in. <a href='/login'>Log in here</a>");
+
 		}
-	} else {
-		res.send("You are not logged in. <a href='/login'>Log in here</a>");
-
 	}
-
 }); //end find blog by id
 
 

@@ -1,12 +1,14 @@
 extends layout
 block append content
-  div.centered.centered_margin
-    h1.blog-header= pageTitle
-    form(class="form-inline" role="form" id="user_auth" action="/login" method="POST")
-      div.form-group
-        //- label(for="user_login") Username :
-        input(type="text" class="form-control" id="user_login" name="user_login" placeholder="Enter Username")
-      div.form-group
-        //- label(for="pass_login") Password :
-        input(type="password" class="form-control" id="pass_login" name="pass_login" placeholder="Enter Password")
-      button(type="submit" class="btn btn-default") Sign In
+  div.container.centered
+    div.centered.centered_margin
+      h1.blog-header Please Login
+      form(class="form-inline" role="form" id="user_auth" action="/login" method="POST")
+        div.form-group
+          //- label(for="user_login") Username :
+          input(type="text" class="form-control" id="user_login" name="user_login" placeholder="Enter Username")
+        div.form-group
+          //- label(for="pass_login") Password :
+          input(type="password" class="form-control" id="pass_login" name="pass_login" placeholder="Enter Password")
+        button(type="submit" class="btn btn-default") Sign In
+      div#error

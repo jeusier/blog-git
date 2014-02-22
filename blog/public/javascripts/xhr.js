@@ -16,22 +16,26 @@ $(document).ready(function(){
 				$('#result').append("<a href='/blogs'><button>Return to Posts List</button></a>")
 			}
 		});
-
 	});
 
-	// $('#update').on('submit', function(event) {
-	// 	event.preventDefault(); 
-	// 	console.log("test");
-	// 	$.ajax('/links/#{link._id}', {
-	// 		type: 'PUT',
-	// 		data: $('#update').serialize(),
-	// 		success: function(result) {
-	// 			console.log("in your ajax");
-	// 			$("#update").remove();
-	// 			$("#updateResult").html(result).fadeIn();
-	// 		}
-	// 	});
-	// });
+	$('#user_auth').on('submit', function(event) {
+		event.preventDefault();
+		$.ajax('/login', {
+			type: 'POST',
+			data: $('#user_auth').serialize(),
+			success: function(result) {
+				console.log(result);
+				if (result == "success") {
+					$('#error').addClass("alert alert-success");
+					$('#error').html("You are now logged in!");
+				} else {
+					$('#error').addClass("alert alert-danger");
+					$('#error').html(result);
+				}
+				
+			}
 
+		});
+	});
 
 });
