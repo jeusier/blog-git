@@ -26,9 +26,9 @@ body
                         li.active
                             a(href='/blogs') Home
                         if logged == true
-                            li.loginLink
+                            li
                                 a(href='/blogs/new') Create Post
-                            li.loginLink
+                            li#logoutButton.loginLink
                                 a(href='/logout') Logout
                         else
                             li.loginLink

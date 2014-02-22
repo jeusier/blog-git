@@ -19,7 +19,7 @@ app.post('/login', function(req, res) {
             req.session.name = input_user;
             //res.send('Welcome '+input_user+'. You are now logged in!');
             //send to ajax call if matched
-            res.send("success");
+            res.send({redirect: '/blogs'});
         } else {
             //send to ajax call if password is wrong
             res.send('Wrong password, please try again.');
@@ -36,5 +36,5 @@ app.post('/login', function(req, res) {
 app.get('/logout', function(req, res) {
     //Destroy user session
     req.session.destroy();
-    res.send('You have logged out. <a href="/login">Login</a> again or return to <a href="/blogs">home page</a>.');
+    res.send({redirect: '/blogs'});
 });

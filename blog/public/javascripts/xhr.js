@@ -23,18 +23,33 @@ $(document).ready(function(){
 		$.ajax('/login', {
 			type: 'POST',
 			data: $('#user_auth').serialize(),
-			success: function(result) {
-				console.log(result);
-				if (result == "success") {
-					$('#error').addClass("alert alert-success");
-					$('#error').html("You are now logged in!");
-				} else {
-					$('#error').addClass("alert alert-danger");
-					$('#error').html(result);
+			dataType: 'json',
+			success: function(data, textStatus, jqXHR) {
+				if (typeof data.redirect == 'string') {
+					window.location = data.redirect;
 				}
-				
+			},
+			error: function(result) {
+				console.log(result);
+				$('#error').addClass("alert alert-danger");
+				$('#error').html(result.responseText);
 			}
+				
+			
 
+		});
+	});
+
+	$('#logoutButton').click(function(event) {
+		event.preventDefault();
+		$.ajax('/logout', {
+			type: 'GET',
+			data: $('#logoutButton').serialize(),
+			success: function(data, textStatus, jqXHR) {
+				if (typeof data.redirect == 'string') {
+					window.location = data.redirect;
+				}
+			},
 		});
 	});
 
