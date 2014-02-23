@@ -168,7 +168,7 @@ createBlog = function(req, res) {
             }
         });
 
-        res.send({redirect: '/'});
+        res.send({redirect: '/blogs/'+new_blog._id});
     } else {
         var logged_in = false;
         res.redirect('/login');

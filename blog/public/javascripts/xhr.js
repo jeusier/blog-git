@@ -52,4 +52,6 @@ $(document).ready(function(){
 		});
 	});
 
+	// $('p.body').html($('p.body').text().replace(\n?/g, '<br />'));
+
 });
