@@ -20,14 +20,14 @@ body
                         span.icon-bar
                         span.icon-bar
                         span.icon-bar
-                    a.navbar-brand(href='/blogs') Blog-git
+                    a.navbar-brand(href='/') Blog-git
                 .collapse.navbar-collapse
                     ul.nav.navbar-nav
                         li.active
-                            a(href='/blogs') Home
+                            a(href='/') Home
                         if logged == true
                             li
-                                a(href='/blogs/new') Create Post
+                                a(href='/blogs') Create Post
                             li#logoutButton.loginLink
                                 a(href='/logout') Logout
                         else

@@ -9,11 +9,10 @@ $(document).ready(function(){
 		$.ajax('/blogs', {
 			type: 'POST',
 			data: $('#create').serialize(),
-			success: function(result) {
-				console.log("in your ajax");
-				$('#result').append("<h2>Post created! Preview below:</h2>");
-				$('#result').append(result).fadeIn();
-				$('#result').append("<a href='/blogs'><button>Return to Posts List</button></a>")
+			success: function(data, textStatus, jqXHR) {
+				if (typeof data.redirect == 'string') {
+					window.location = data.redirect;
+				}
 			}
 		});
 	});

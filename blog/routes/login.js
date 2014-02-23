@@ -1,5 +1,6 @@
 var express = require('express');
 var app = module.exports = express();
+var mongoose = require ('mongoose');
 
 //Display login page
 app.get('/login', function(req, res) {
@@ -19,7 +20,7 @@ app.post('/login', function(req, res) {
             req.session.name = input_user;
             //res.send('Welcome '+input_user+'. You are now logged in!');
             //send to ajax call if matched
-            res.send({redirect: '/blogs'});
+            res.send({redirect: '/'});
         } else {
             //send to ajax call if password is wrong
             res.send('Wrong password, please try again.');
@@ -36,5 +37,5 @@ app.post('/login', function(req, res) {
 app.get('/logout', function(req, res) {
     //Destroy user session
     req.session.destroy();
-    res.send({redirect: '/blogs'});
+    res.send({redirect: '/'});
 });

@@ -5,9 +5,9 @@ var mongoose = require ('mongoose');
 
 //new mongodb schema to hold articles
 var blogSchema = new mongoose.Schema({
-	title: String,
-	body: String,
-	created_at: { type: Date, default: Date.now }
+    title: String,
+    body: String,
+    created_at: { type: Date, default: Date.now }
 }); //end schema
 
 var blogs = mongoose.model('blogs', blogSchema);
@@ -15,226 +15,177 @@ var blogs = mongoose.model('blogs', blogSchema);
 mongoose.connect('mongodb://localhost/blogdb')
 
 
-// app.get('/blogs/session/:user', function(req, res){
-// 	req.session.name = req.params.user;
-// 	res.send('<p>Session Set: <a href="/blogs">View Here</a>');
-// });
+getAllBlogs = function(req, res) {
+    blogs.find(function(err, blog) {
+        if (err) {
+            console.log("error: blog list isn't displaying")
+        }
+
+        if (req.session.name) {
+            var logged_in = true;
+        } else {
+            var logged_in = false;
+        }
+
+        res.render('index', {
+            pageTitle: 'Blog-git',
+            articles: blog,
+            logged: logged_in
+        });
+
+    });
+
+};
 
 
-//Find all blogs
-app.get('/blogs', function(req, res) {
-	if (req.session.name){
-		var logged_in = true;
-		var session_name = req.session.name;
-		console.log(logged_in);
-	//find all blogs in collection
-	blogs.find(function(err, blog) {
-		if (err) {
-			console.log("error: blog list isn't displaying")
-		}
-		//display all blogs into index
-		res.render('index', { 
-			pageTitle: 'Blog-git',
-			articles: blog,
-			logged: logged_in
+getBlog = function(req, res) {
+    var find_id = req.params.id;
+    blogs.findOne({_id: find_id}, function(err, blog) {
+        if (err) {
+            console.log("error: unable to display blog");
+        }
 
-		}); //end of res.render
+        if (req.session.name) {
+            var logged_in = true;
+        } else {
+            var logged_in = false;
+        }
 
-	}); //end of blogs.find
+        res.render('show', {
+            pageTitle: 'View Post',
+            blog: blog,
+            logged: logged_in
 
-	} else {
-		var logged_in = false;
-		console.log(logged_in);
-
-		blogs.find(function(err, blog) {
-			if (err) {
-				console.log("error: blog list isn't displaying")
-			}
-		//display all blogs into index
-			res.render('index', { 
-				pageTitle: 'Blog-git',
-				articles: blog,
-				logged: logged_in
-
-		}); //end of res.render
-
-	}); //end of blogs.find
-	}
-
-}); //end of find all blogs
+        });
+    });
+};
 
 
-//Display new blog form
-var newPost = function (){
-	app.get('/blogs/:new', function(req, res) {
-		if (req.params.new === "new") {
-			if (req.session.name){
-				var logged_in = true;
-				
-					//display form in new.jade
-				res.render('new', {pageTitle: 'New Post', logged: logged_in});
-				
-			} else {
-				res.send("You are not logged in. <a href='/login'>Log in here</a>");
-			}
-		}
+getEditBlog = function(req, res) {
+    var find_id = req.params.id;
+    blogs.findOne({_id: find_id}, function(err, blog) {
+        if (err) {
+            console.log("error: unable to display blog to edit");
+        }
 
-	});
-} //end of display new blog form
+        if (req.session.name) {
+            var logged_in = true;
+        } else {
+            var logged_in = false;
+            res.redirect('/login');
+            return;
+        }
 
-app.get('/blogs/:id', function(req, res) {
-	if (req.params.id == "new") {
-		newPost();
-	} else {
-		if (req.session.name){
-			var logged_in = true;
-			var find_id = req.params.id;
+        res.render('edit', {
+            pageTitle: 'Update/Delete Blog Post',
+            blog: blog,
+            logged: logged_in
 
-		//find all blogs in collection
-		blogs.findOne({_id: find_id}, function(err, blog) {
-			if (err) {
-				console.log("error: blog isn't displaying")
-			}
-
-			//display all blogs into index
-			res.render('show', { 
-				pageTitle: 'View Post',
-				blog: blog,
-				logged: logged_in
-
-			}); //end of res.render
-
-		}); //end of blogs.find
-
-		} else {
-			var logged_in = false;
-			var find_id = req.params.id;
-
-			blogs.findOne({_id: find_id}, function(err, blog) {
-				if (err) {
-					console.log("error: blog isn't displaying")
-				}
-			//display all blogs into index
-				res.render('show', { 
-					pageTitle: 'View Post',
-					blog: blog,
-					logged: logged_in
-
-				}); //end of res.render
-
-			}); //end of blogs.find
-		}
-	}
-
-}); //end of find all blogs
+        });
+    });
+};
 
 
-//Find blog by id
-app.get('/blogs/:id/:edit', function(req, res) {
-	if (req.params.id == "new") {
-		newPost();
-	} else {
-		if (req.session.name){
-			var logged_in = true;
-			var blog_id = req.params.id;
-		
-			//find blog based on id in mongodb
-			blogs.findOne({_id: blog_id}, function(err, blog) {
-				console.log(blog_id);
-				if (err) {
-					console.log("error: unable to display blog");
-				}
-				//display the blog into show
-				res.render('edit', {pageTitle: 'Update/Delete Post', blog: blog, logged: logged_in});
+editBlog = function(req, res) {
+    var find_id = req.params.id;
+    blogs.findOne({_id: find_id}, function(err, blog) {
+        if (err) {
+            console.log("error: unable to update blog");
+        }
 
-			}); //end blogs.findById
+        if (req.session.name) {
+            var logged_in = true;
+        } else {
+            var logged_in = false;
+            res.redirect('/login');
+            return;
+        }
 
-		} else {
-			res.send("You are not logged in. <a href='/login'>Log in here</a>");
+        blog.title = req.body.title;
+        blog.body = req.body.body;
+        
+        blog.save(function(err) {
+            if (err) {
+                console.log("error: unable to save updated blog");
+            }
+        });
 
-		}
-	}
-}); //end find blog by id
+        res.redirect('/blogs/'+find_id);
+        return;
 
-
-//Create new blog
-app.post('/blogs', function(req, res) {
-	if (req.session.name){
-		//store form values into variables
-		var new_title = req.body.title;
-		var new_body = req.body.body;
-		//create new blog from model
-		var new_blog = new blogs({ title: new_title, body: new_body, created_at: { type: Date, default: Date.now }
-		}); //end new_blog
-		console.log(new_blog);
-		//save new blog into mongodb
-		new_blog.save(function(err) {
-			if (err)
-				console.log("error: new blog couldn't save");
-
-		}); //end of new_blog.save
-		//display blogs index page
-		res.send("<div class='article'> \
-			<div class='title'>"+new_blog.title+"</div> \
-			<div class='body'>"+new_blog.body+"</div> \
-			<div class='created_at'>Created at: "+new_blog.created_at+"</div> \
-			</div>"
-			);
-		return;
-	} else {
-		res.send("You are not logged in. <a href='/login'>Log in here</a>");
-	}
-
-}); //end create new blog
+    });
+};
 
 
-//Update blog
-app.put('/blogs/:id', function(req, res) {
-	if (req.session.name){	
-		//store form variables
-		var edit_id = req.params.id;
-		var edit_title = req.body.title;
-		var edit_body = req.body.body;
-		//find the blog in mongodb and replace values
-		blogs.findOne({_id: edit_id}, function(err, blog) {
-			blog.title = edit_title;
-			blog.body = edit_body;
+removeBlog = function(req, res) {
+    var find_id = req.params.id;
 
-			if(err) {
-				console.log("error: unable to update blog");
-			}
+    if (req.session.name) {
+        var logged_in = true;
+    } else {
+        var logged_in = false;
+        res.redirect('/login');
+        return;
+    }
+    blogs.findByIdAndRemove(find_id, function(err) {
+        if (err) {
+            console.log('error: could not delete blog');
+        }
+    });
 
-			blog.save(function(err) {
-				if(err)
-					console.log("error: couldn't save update");
-			});
-
-			res.redirect("..");
-			return;
-
-		}); //end blogs.findOne
-
-	} else {
-		res.send("You are not logged in. <a href='/login'>Log in here</a>");
-	}
-
-}); //end update blog
+    res.redirect('/');
+};
 
 
-//Delete blog
-app.delete('/blogs/:id', function(req, res) {
-	if (req.session.name){	
-		//store id into variable
-		var delete_id = req.param('id');
-		//delete the blog from mongodb
-		blogs.find({
-			_id: delete_id
-		}).remove().exec();
-		//go back to blog index page
-		res.redirect("..");
+getCreateBlog = function(req, res) {
+    if (req.session.name) {
+        var logged_in = true;
+        res.render('new', {
+            pageTitle: 'Create Post',
+            logged: logged_in
+        });
+    } else {
+        var logged_in = false;
+        res.redirect('/login');
+        return;
+    }
+};
 
-	} else {
-		res.send("You are not logged in. <a href='/login'>Log in here</a>");
-	}	
 
-}); //end of delete blog
+createBlog = function(req, res) {
+
+    if(req.session.name) {
+        var logged_in = true;
+        var new_blog = new blogs({
+            title: req.body.title,
+            body: req.body.body,
+            created_at: { type: Date, default: Date.now }
+        });
+
+        new_blog.save(function(err) {
+            if (err) {
+                console.log("error: could not save new post");
+            }
+        });
+
+        res.send({redirect: '/'});
+    } else {
+        var logged_in = false;
+        res.redirect('/login');
+    }
+};
+
+
+module.exports = function() {
+
+    app.get('/', this.getAllBlogs);
+    app.get('/blogs/:id', this.getBlog);
+    app.get('/blogs/:id/edit', this.getEditBlog);
+    app.put('/blogs/:id/edit', this.editBlog);
+    app.delete('/blogs/:id', this.removeBlog);
+    app.get('/blogs', this.getCreateBlog);
+    app.post('/blogs', this.createBlog);
+
+    return app;
+
+}();
